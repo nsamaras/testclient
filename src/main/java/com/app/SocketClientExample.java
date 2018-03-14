@@ -41,7 +41,6 @@ public class SocketClientExample {
             //close resources
             ois.close();
             oos.close();
-            Thread.sleep(100);
         }
     }
 }

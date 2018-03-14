@@ -16,7 +16,7 @@ public class SocketServerExample {
     //socket server port on which it will listen
     private static int port = 5000;
     
-    public static void main(String args[]) throws IOException, ClassNotFoundException{
+    public static void main(String args[]) throws IOException, ClassNotFoundException, InterruptedException{
         //create the socket server object
         server = new ServerSocket(port);
         //keep listens indefinitely until receives 'exit' call or program terminates
@@ -33,30 +33,17 @@ public class SocketServerExample {
             message.setUuid(uuid);
             message.setServerMessage(MessagesUtil.getServerHelloMsg(uuid));
             System.out.println("Client Msg :"+message.getClientMessage());
-//            System.out.println("UUID : " + message.getUuid());
             
             //create ObjectOutputStream object
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             
-            //write object to Socket
-            message.setServerMessage(MessagesUtil.getServerResponceMsg(message.getName()));
-            oos.writeObject(message);
-//            System.out.println("Hi Client "+message.getName());
-            System.out.println("*****************************************************");
-            
-            //close resources
-            ois.close();
-            oos.close();
-            socket.close();
-            
-            //terminate the server if client sends exit request
             if(message.getClientMessage().equalsIgnoreCase(MessagesUtil.getClientEndMsg())) {
             	message.setServerMessage(MessagesUtil.getServerEndMsg(message.getName(), 30));
-//            	break;
+            } else {
+                message.setServerMessage(MessagesUtil.getServerResponceMsg(message.getName()));
             }
+            oos.writeObject(message);
+
         }
-//        System.out.println("Shutting down Socket server!!");
-        //close the ServerSocket object
-//        server.close();
     }
 }

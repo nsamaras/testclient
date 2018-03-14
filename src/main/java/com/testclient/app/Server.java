@@ -31,7 +31,7 @@ public class Server {
 				InputStream is = socket.getInputStream();
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
-				UUID uuid = new GenerateUUID().getUuid();
+				UUID uuid = MessagesUtil.getUuid();
 				returnMessage = MessagesUtil.getServerHelloMsg(uuid);
 
 				// HI, I’M <session-id>

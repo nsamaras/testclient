@@ -22,9 +22,9 @@ public class SocketClientExample {
             //write to socket using ObjectOutputStream
             oos = new ObjectOutputStream(socket.getOutputStream());
             System.out.println("Sending request to Socket Server");
-            if(i==4)
+            if(i==4) {
             	oos.writeObject("exit");
-            else  {
+            } else  {
             	oos.writeObject(""+i);
             }
             //read the server response message
