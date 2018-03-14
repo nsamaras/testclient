@@ -50,11 +50,13 @@ public class SocketServerExample {
             socket.close();
             
             //terminate the server if client sends exit request
-            if(message.getClientMessage().equalsIgnoreCase("exit")) 
-            	break;
+            if(message.getClientMessage().equalsIgnoreCase(MessagesUtil.getClientEndMsg())) {
+            	message.setServerMessage(MessagesUtil.getServerEndMsg(message.getName(), 30));
+//            	break;
+            }
         }
-        System.out.println("Shutting down Socket server!!");
+//        System.out.println("Shutting down Socket server!!");
         //close the ServerSocket object
-        server.close();
+//        server.close();
     }
 }
