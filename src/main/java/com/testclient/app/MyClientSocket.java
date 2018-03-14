@@ -22,15 +22,12 @@ public class MyClientSocket {
         while (System.currentTimeMillis() < end) {
         	this.socket.close();
         	System.out.println("end connection");
-            input = scanner.nextLine();
-            System.out.println("This socket");            
+            input = scanner.nextLine();                       
         }
     }
     
     public static void main(String[] args) throws Exception {
-        MyClientSocket client = new MyClientSocket(
-                InetAddress.getByName("127.0.0.1"), Integer.parseInt("54010"));
-        
+        MyClientSocket client = new MyClientSocket(InetAddress.getByName("127.0.0.1"), Integer.parseInt("49322"));
         System.out.println("\r\nConnected to Server: " + client.socket.getInetAddress());
         client.start(); 
     }
