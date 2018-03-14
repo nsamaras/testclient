@@ -28,19 +28,28 @@ public class Client
             OutputStreamWriter osw = new OutputStreamWriter(os);
             BufferedWriter bw = new BufferedWriter(osw);
  
-            String number = "2";
- 
-            String sendMessage = number + "\n";
-            bw.write(sendMessage);
+            String firstMsgFromClient = "***********************\n";
+
+            bw.write(firstMsgFromClient);
             bw.flush();
-            System.out.println("Message sent to the server : "+sendMessage);
+            System.out.println("Message sent to the server : "+firstMsgFromClient);
  
             //Get the return message from the server
             InputStream is = socket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String message = br.readLine();
-            System.out.println("Message received from the server : " +message);
+            System.out.println("Server Msg : " +message);
+            
+            // HI, I’M <name>
+            String name = MessagesUtil.generateName();
+            String msg = MessagesUtil.getClientHiMsg(name);
+            bw.write(msg);
+            bw.flush();
+            System.out.println("HI I'M " + name);
+            
+            
+            
         }
         catch (Exception exception) {
             exception.printStackTrace();
@@ -49,7 +58,7 @@ public class Client
             //Closing the socket
             try {
             	System.out.println("Wating 30 sec");            	
-                socket.close();                
+//                socket.close();                
             }
             catch(Exception e) {
                 e.printStackTrace();

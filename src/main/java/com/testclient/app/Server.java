@@ -4,20 +4,25 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.UUID;
 
 public class Server {
 
 	private static Socket socket;
 
 	public static void main(String[] args) {
+		
+		String returnMessage;
+		
 		try {
 			int port = 5000;
 			ServerSocket serverSocket = new ServerSocket(port);
-			System.out.println("Server Started and listening to the port 5000");
+			System.out.println("Server Started and listening to the port 5000 \n");
 
 			// Server is running always. This is done using this while(true) loop
 			while (true) {
@@ -26,30 +31,31 @@ public class Server {
 				InputStream is = socket.getInputStream();
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
-				String number = br.readLine();
-				System.out.println("Message received from client is " + number);
-				// Multiplying the number by 2 and forming the return message
-				String returnMessage;
-				try {
-					int numberInIntFormat = Integer.parseInt(number);
-					int returnValue = numberInIntFormat * 2;
-					returnMessage = String.valueOf(returnValue) + "\n";
-				} catch (NumberFormatException e) {
-					// Input was not a number. Sending proper message back to
-					// client.
-					returnMessage = "Please send a proper number\n";
-				}
+				UUID uuid = new GenerateUUID().getUuid();
+				returnMessage = MessagesUtil.getServerHelloMsg(uuid);
 
-				// Sending the response back to the client.
+				// HI, I’M <session-id>
 				OutputStream os = socket.getOutputStream();
 				OutputStreamWriter osw = new OutputStreamWriter(os);
 				BufferedWriter bw = new BufferedWriter(osw);
 				bw.write(returnMessage);
-				System.out.println("Message sent to the client is " + returnMessage);
 				bw.flush();
+				System.out.println("Message sent to the client is " + returnMessage);
+				
+				// HI <name>
+				InputStream is_2 = socket.getInputStream();
+				InputStreamReader isr_2 = new InputStreamReader(is_2);
+				BufferedReader br_2 = new BufferedReader(isr_2);
+				String name = br_2.readLine();
+				OutputStream os_2 = socket.getOutputStream();
+				OutputStreamWriter osw_2 = new OutputStreamWriter(os_2);
+				BufferedWriter bw_2 = new BufferedWriter(osw_2);
+				bw_2.write(MessagesUtil.getServerResponceMsg(name));
+				System.out.println(MessagesUtil.getServerResponceMsg(name));
+				bw_2.flush();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			returnMessage = MessagesUtil.getNotSupportedMsg();
 		} finally {
 			try {
 				socket.close();
