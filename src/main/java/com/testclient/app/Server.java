@@ -12,10 +12,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class Server {
 	private static Socket socket;
+	private static List<MessageBean> beans = new ArrayList<>();
+	
 	 public static void main(String[] args) throws IOException {
 	 try
 	    {
@@ -27,12 +34,15 @@ public class Server {
 	            //Reading the message from the client
 	            socket = serverSocket.accept();
 	            System.out.println("Client has connected!");
+	            
 	            InputStream is = socket.getInputStream();
 	            InputStreamReader isr = new InputStreamReader(is);
 	            BufferedReader br = new BufferedReader(isr);
 	            
 	            String msg = br.readLine();
 	            System.out.println("Message received from client is "+msg);
+	            
+	            updateList(msg);
 
 	            //Multiplying the number by 2 and forming the return message
 	            String returnMessage;
@@ -66,4 +76,14 @@ public class Server {
 	        e.printStackTrace();
 	    }
 	 }
+	 
+	private static void updateList(String value) {
+		System.out.println("Size: " + beans.size());
+
+		MessageBean bean = new MessageBean();
+		bean.setName(value);
+		bean.setUuid(MessagesUtil.getUuid());
+		beans.add(bean);
+
+	}
 }

@@ -9,11 +9,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.UUID;
  
 public class Client {
 	private static Socket socket;
-
+	private static UUID uuid; 
 	public static void main(String args[])
 	{
 	    Scanner input=new Scanner(System.in);
@@ -37,13 +41,29 @@ public class Client {
 	            bw.write(sendMessage);
 	            bw.flush();
 	            System.out.println("Message sent to the server : "+sendMessage);
-
+	            
+	            if(getSessionId() == null) {
+	            	UUID uuid = MessagesUtil.getUuid();
+	            	setSessionId(uuid);
+	            	System.out.println("UUID "+sendMessage);
+	            } else {
+	            	System.out.println("Has uuid ");
+	            }
+ 	            
 	            //Get the return message from the server
 	            InputStream is = socket.getInputStream();
 	            InputStreamReader isr = new InputStreamReader(is);
 	            BufferedReader br = new BufferedReader(isr);
 	            String message = br.readLine();
 	            System.out.println("Message received from the server : " +message);
+	            
+	            if(message.contains("BYE")) {
+	            	System.out.println("message contains BYE ");
+	            	is.close();
+	            	os.close();
+					socket.close();
+					break;
+	            }
 	        }
 	        catch (IOException exception)
 	        {
@@ -51,4 +71,11 @@ public class Client {
 	        }
 	    }
 	}
+	public static UUID getSessionId() {
+		return uuid;
+	}
+	public static void setSessionId(UUID uuid) {
+		Client.uuid = uuid;
+	}
+	
 }
